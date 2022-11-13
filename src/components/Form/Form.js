@@ -1,7 +1,8 @@
 
-import { useState, useEffect, useReducer } from 'react'
+import { useState, useEffect, useReducer, useContext } from 'react'
 import Button from '../UI/Button'
 import Card from '../UI/Card'
+import AuthContext from '../../store/auth-context'
 
 
 
@@ -25,7 +26,8 @@ const passwordReducer = (state, action) => {
     return {value: '', isValid: false}
 }
 
-const Form = (props) => {
+const Form = () => {
+    const ctx = useContext(AuthContext)
     // const [enteredEmail, setEnteredEmail] = useState(''); // managing the entered email
     // const [emailIsValid, setEmailIsValid] = useState(true); //managing validity of entered email
     // const [enteredPassword, setEnteredPassword] = useState(''); // managing the entered pasword
@@ -110,14 +112,14 @@ const Form = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
         // props.onLogin(enteredEmail, enteredPassword);
-        props.onLogin(emailState.value, passwordState.value);
+        ctx.onLogin(emailState.value, passwordState.value);
       };
 
     return (
         <>
-            {props.loginStatus && <Card styled="text-xl font-bold">Welcome Back!</Card>}
+            {ctx.isLoggedIn && <Card styled="text-xl font-bold">Welcome Back!</Card>}
 
-            {!props.loginStatus && <form onSubmit={submitHandler}>
+            {!ctx.isLoggedIn && <form onSubmit={submitHandler}>
                 <div className='py-3 flex flex-col'>
                     <label htmlFor="email" className='font-bold mb-2'>Email</label>
                     <input onBlur={validateEmailHandler} onChange={emailChangeHandler} value={emailState.value} id="email" type="email" className={`tablet:w-96 mobile:w-60 px-2 h-8 rounded-md text-lg outline-none border-2 ${emailState.isValid === false ? 'border-red-600' : ''}`}></input>
